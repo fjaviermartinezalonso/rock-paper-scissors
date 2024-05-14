@@ -1,46 +1,34 @@
 function getComputerChoice() {
-    let choice;
-    switch(Math.floor(Math.random()*3)) {
-        case 0:
-            choice = "rock";
-            break;
-        case 1:
-            choice = "paper";
-            break;
-        case 2:
-            choice = "scissors";
-            break;
-    }
-    return choice;
+    return Math.floor(Math.random()*3);
 }
 
 function playRound(computerChoice, playerChoice) {
-
+    const choices = {
+        0: "rock",
+        1: "paper",
+        2: "scissors",
+    };
     const scoreText = document.querySelector(".score__text");
-
-    if(computerChoice == playerChoice) {
-        scoreText.textContent = `Tie! Both choices are ${computerChoice}`;
+    const result = (3 + computerChoice - playerChoice) % 3;
+    
+    switch(result) {
+        case 0:
+            scoreText.textContent = `Tie! Both choices are ${choices[computerChoice]}`;
+            break;
+        case 1:
+            document.querySelector(".computer-points").textContent++;
+            scoreText.textContent = `You lose! ${choices[computerChoice]} beats ${choices[playerChoice]}`;
+            break;
+        case 2:
+            document.querySelector(".player-points").textContent++;
+            scoreText.textContent = `You win! ${choices[playerChoice]} beats ${choices[computerChoice]}`;
+            break;
     }
-    else if((computerChoice == "rock" && playerChoice == "scissors")
-    || (computerChoice == "paper" && playerChoice == "rock")
-    || (computerChoice == "scissors" && playerChoice == "paper")) {
-        updateScore("computer");
-        scoreText.textContent = `You lose! ${computerChoice} beats ${playerChoice}`;
-    }
-    else {
-        updateScore("player");
-        scoreText.textContent = `You win! ${playerChoice} beats ${computerChoice}`;
-    }
-}
-
-function updateScore(winner) {
-    if(winner == "computer") document.querySelector(".computer-points").textContent++;
-    else if(winner == "player") document.querySelector(".player-points").textContent++;
 }
 
 const buttons = document.querySelectorAll("button");
 buttons.forEach( (btn) => {
     btn.addEventListener("click", (e) => {
-        playRound(getComputerChoice(), e.target.className);
+        playRound(getComputerChoice(), e.target.value);
     });
 });
